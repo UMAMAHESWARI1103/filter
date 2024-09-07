@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Portal</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="joblisting"></div>
+    <div id="filters">
+    <select id="jobType">
+        <option value="all">All</option>
+        <option value="fulltime">Full-time</option>
+        <option value="partTime">Part-time</option>
+    </select><br>
+    <label>Location</label><br>
+    <input type="text" id="location" placeholder="Location">
+    <input type="range" id="salary" min="0" max="100000" value="0">
+    <span id="salaryValue">0</span>
+    <button id="filterbtn">Filter</button>
+</div>    
+
+    <script>
+        const joblisting = [
+            { title: 'Web Developer', type: 'fulltime', location: 'City A', salary: 60000 },
+            { title: 'UX Designer', type: 'partTime', location: 'City B', salary: 40000 },
+        ];
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const jobTypeFilter = document.getElementById('jobType');
+            const locationFilter = document.getElementById('location');
+            const salaryFilter = document.getElementById('salary');
+            const salaryValue = document.getElementById('salaryValue');
+            const filterbtn = document.getElementById('filterbtn');
+            const jobListingsContainer = document.getElementById('joblisting');
+
+            function renderJobListings(jobs) {
+                jobListingsContainer.innerHTML = '';
+                jobs.forEach(job => {
+                    const listingDiv = document.createElement('div');
+                    listingDiv.innerHTML = `<h3>${job.title}</h3><p>Type: ${job.type}</p><p>Location: ${job.location}</p><p>Salary: $${job.salary}</p>`;
+                    jobListingsContainer.appendChild(listingDiv);
+                });
+            }
+
+            function filterJobListings() {
+                const jobType = jobTypeFilter.value;
+                const location = locationFilter.value.toLowerCase();
+                const salary = parseInt(salaryFilter.value, 10);
+
+                console.log('Job Type:', jobType);
+                console.log('Location:', location);
+                console.log('Salary:', salary);
+
+                const filteredJobs = joblisting.filter(job => {
+                    console.log('Checking job:', job);
+                    return (jobType === 'all' || job.type === jobType) &&
+                        (job.location.toLowerCase().includes(location)) &&
+                        (job.salary >= salary);
+                });
+
+                console.log('Filtered Jobs:', filteredJobs);
+                renderJobListings(filteredJobs);
+            }
+
+            filterbtn.addEventListener('click', function () {
+                console.log('Filter button clicked');
+                filterJobListings();
+            });
+
+            salaryFilter.addEventListener('input', function () {
+                salaryValue.textContent = salaryFilter.value;
+                console.log('Salary filter value:', salaryFilter.value);
+            });
+
+            // Initialize with all job listings
+            renderJobListings(joblisting);
+        });
+    </script>
+</body>
+</html>
